@@ -22,6 +22,14 @@ int const getLength(const string column7) {
 	return data/2;
 }
 
+long const getAddress(const string column6) {
+	unsigned long address;
+	stringstream base16;
+	base16 << hex << column6;
+	base16 >> address;
+	return (signed long)address;
+}
+
 string const getIO(const string column9) {
 	if(column9 == "Wr") {
 		return "Write";
@@ -54,10 +62,14 @@ int main(int argc, char* argv[]) {
 		int num = 1;
 		string line = "";
 
+		string cycle = "";
+		int words = 0;
+		bool marker1 = false;
+		bool marker2 = false;
+		unsigned long address;
+
 		// Line by line
 		while (getline(f, line)) {
-			int words = 0;
-			string cycle = "";
 
 			// Split into vector by whitespace
 			istringstream linestream(line);
@@ -73,7 +85,11 @@ int main(int argc, char* argv[]) {
 				cycle = getIO(column[9]);
 				printCommand(cycle, words, num, "S-to-D");
 				if(words > 0) {
-					// do stuff
+					marker1 = true;
+				}
+				else {
+					marker1 = false;
+					cout << endl;
 				}
 			}
 			// D-to-S marker
@@ -83,7 +99,27 @@ int main(int argc, char* argv[]) {
 				cycle = getIO(column[9]);
 				printCommand(cycle, words, num, "S-to-D");
 				if(words > 0) {
-					// do stuff
+					marker2 = true;
+				}
+				else {
+					marker2 = false;
+					cout << endl;
+				}
+			}
+			// S-to-D range
+			else if(marker1 && words > 0) {
+				address = getAddress(column[6]);
+				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
+					cout << "\t\t\t\tLine " << num << ". Word: " << column[7] << endl;
+					words -= 2;
+				}
+			}
+			// D-to-S range
+			else if(marker2 && words > 0) {
+				address = getAddress(column[6]);
+				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
+					cout << "\t\t\t\tLine " << num << ". Word: 0x" << column[7] << endl;
+					words -= 2;
 				}
 			}
 
