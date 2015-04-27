@@ -42,6 +42,11 @@ string const getIO(const string column9) {
 	}
 }
 
+void printWords(const string data, int &count, const int words, const int num) {
+	cout << "Line " << num << ". Word " << (count-words) << ": " << data.substr(0,4) << endl;
+	cout << "Line " << num << ". Word " << (count-words+1) << ": " << data.substr(4,7) << endl;
+}
+
 void const printCommand(const string cycle, const int words, const int num, const string direction) {
 	cout << "Line " << num << ". ";
 	cout << cycle << " " << direction << " command: ";
@@ -64,6 +69,7 @@ int main(int argc, char* argv[]) {
 
 		string cycle = "";
 		int words = 0;
+		int count = 0;
 		bool marker1 = false;
 		bool marker2 = false;
 		unsigned long address;
@@ -80,8 +86,8 @@ int main(int argc, char* argv[]) {
 
 			// S-to-D marker
 			if(column[6] == "40000810") {
-				cout << column[6] << "\t" << column[7] << "\t"; // debugging
 				words = getLength(column[7]);
+				count = words;
 				cycle = getIO(column[9]);
 				printCommand(cycle, words, num, "S-to-D");
 				if(words > 0) {
@@ -94,8 +100,8 @@ int main(int argc, char* argv[]) {
 			}
 			// D-to-S marker
 			else if(column[6] == "40000C18") {
-				cout << column[6] << "\t" << column[7] << "\t"; // debugging
 				words = getLength(column[7]);
+				count = words;
 				cycle = getIO(column[9]);
 				printCommand(cycle, words, num, "S-to-D");
 				if(words > 0) {
@@ -110,7 +116,7 @@ int main(int argc, char* argv[]) {
 			else if(marker1 && words > 0) {
 				address = getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
-					cout << "\t\t\t\tLine " << num << ". Word: " << column[7] << endl;
+					printWords(column[7], count, words, num);
 					words -= 2;
 				}
 			}
@@ -118,9 +124,17 @@ int main(int argc, char* argv[]) {
 			else if(marker2 && words > 0) {
 				address = getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
-					cout << "\t\t\t\tLine " << num << ". Word: 0x" << column[7] << endl;
+					printWords(column[7], count, words, num);
 					words -= 2;
 				}
+			}
+			else if(marker1 && words == 0) {
+				marker1 = false;
+				cout << endl;
+			}
+			else if(marker2 && words == 0) {
+				marker2 = false;
+				cout << endl;
 			}
 
 			++num;
