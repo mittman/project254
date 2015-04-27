@@ -45,14 +45,11 @@ int main(int argc, char* argv[]) {
 		fstream f;
 		f.open(argv[1], ios::in);
 		
-		int max = 0;
 		int num = 1;
 		string line = "";
 
-		// FIXME: segfaults without max
-		while (f.good() && !f.eof() && max < 10) {
-			// Line by line
-			getline(f, line);
+		// Line by line
+		while (getline(f, line)) {
 
 			// Split into vector by whitespace
 			istringstream linestream(line);
@@ -66,14 +63,12 @@ int main(int argc, char* argv[]) {
 				cout << column[6] << "\t" << column[7] << "\t Line " << num << ". " << "\t";
 				cout << getIO(column[9]) << " S-to-D command: ";
 				cout << getLength(column[7]) << " words" << endl;
-				++max;
 			}
 			// D-to-S marker
 			else if(column[6] == "40000C18") {
 				cout << column[6] << "\t" << column[7] << "\t Line " << num << ". " << "\t";
 				cout << getIO(column[9]) << " D-to-S command: ";
 				cout << getLength(column[7]) << " words" << endl;
-				++max;
 			}
 
 			++num;
