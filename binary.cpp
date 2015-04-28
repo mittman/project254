@@ -121,3 +121,23 @@ string binaryCode(unsigned int a, int word) // Shows the description provided
 
 	return phrase;
 }
+
+// This function will return an integer 1 if it is a read, or an integer 2 if it is a write. My idea for the logic of using the function will be something like:if (cycle = 1) then it is a read and display "Read S-to-D command" or whatever. The 0 is just to check if string cycle was passed through properly, can be removed once we actually finalize the code.
+int CycleType(string cycle)
+{
+	string read = "Rd";
+	string write = "Wr";
+	if( cycle == read )
+	{
+		return 1;
+	}
+	else if (cyle == write)
+	{
+		return 2;
+	}
+	// to check if the strings were compared properly
+	else
+	{
+		return 0;
+	}
+}
