@@ -1,5 +1,8 @@
 # Binaries
 parser
 
+# Preprocessed
+*.o
+
 # Raw input
 *.log
