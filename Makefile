@@ -8,8 +8,20 @@ PREFIX := /usr/bin
 
 all: parser
 
-parser:  parser.o
-	$(CC) -o $@ $^
+address.o:  address.cpp
+	$(CC) $(CFLAGS) -c $^
+
+cycle.o:  cycle.cpp
+	$(CC) $(CFLAGS) -c $^
+
+output.o:  output.cpp
+	$(CC) $(CFLAGS) -c $^
+
+parser.o:  parser.cpp
+	$(CC) $(CFLAGS) -c $^
+
+parser:  address.o cycle.o output.o parser.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean: 
 	$(RM) parser *.o *~
