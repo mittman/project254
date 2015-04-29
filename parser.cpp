@@ -15,8 +15,10 @@
 
 #include "address.h"
 #include "binary.h"
+#include "binary2.h"
 #include "cycle.h"
 #include "output.h"
+
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -40,9 +42,12 @@ int main(int argc, char* argv[]) {
 		bool marker2 = false;
 		unsigned long address;
 
+		string binary = "";
+
+
 		// Initialize objects
 		Address a;
-		//Binary b;
+		Binary2 b;
 		Cycle c;
 		Output o;
 
@@ -88,6 +93,8 @@ int main(int argc, char* argv[]) {
 			else if(marker1 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
+					binary = b.getBinary(column[7]);
+					cout << b.getLowestAddress() << " " << b.getHighestAddress() <<endl;
 					o.printWords(column[7], count, words, num);
 					words -= 2;
 				}

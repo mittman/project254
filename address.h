@@ -13,8 +13,8 @@ class Address {
 		int const getLength(const string column7);
 		long const getAddress(const string column6);
 	private:
-		string column7;
-		string column6;
+		//string column7;
+		//string column6;
 };
 
 #endif
