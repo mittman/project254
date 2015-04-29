@@ -13,6 +13,7 @@
 #include <iterator>
 
 #include "address.h"
+#include "binary.h"
 #include "cycle.h"
 #include "output.h"
 using namespace std;
@@ -40,6 +41,7 @@ int main(int argc, char* argv[]) {
 
 		// Initialize objects
 		Address a;
+		//Binary b;
 		Cycle c;
 		Output o;
 
