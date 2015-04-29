@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
+#include <bitset>
 
 #include "address.h"
 #include "binary.h"
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
-				o.printCommand(cycle, words, num, "S-to-D");
+				o.printCommand(cycle, words, num, "D-to-S");
 				if(words > 0) {
 					marker2 = true;
 				}
