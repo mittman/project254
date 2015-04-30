@@ -2,6 +2,5 @@
 **Chris **
 **Hao **
 **Rudy **
-**Alvarado **
 **Mark **
 **Kevin **
