@@ -11,11 +11,11 @@
 #include <string>
 #include <vector>
 #include <iterator>
-#include <bitset>
+#include <cstdlib>
 
 #include "address.h"
-#include "binary.h"
-#include "binary2.h"
+//#include "binary.h"
+//#include "binary2.h"
 #include "cycle.h"
 #include "output.h"
 
@@ -43,11 +43,11 @@ int main(int argc, char* argv[]) {
 		unsigned long address;
 
 		string binary = "";
-
+		string reltime = "";
+		double elapsed = 0.0;
 
 		// Initialize objects
 		Address a;
-		Binary2 b;
 		Cycle c;
 		Output o;
 
@@ -66,6 +66,8 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
+				elapsed = c.toNanoSeconds(reltime);
+				c.setElapsed(cycle, elapsed, "S-to-D");
 				o.printCommand(cycle, words, num, "S-to-D");
 				if(words > 0) {
 					marker1 = true;
@@ -80,6 +82,8 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
+				elapsed = c.toNanoSeconds(reltime);
+				c.setElapsed(cycle, elapsed, "D-to-S");
 				o.printCommand(cycle, words, num, "D-to-S");
 				if(words > 0) {
 					marker2 = true;
@@ -93,8 +97,11 @@ int main(int argc, char* argv[]) {
 			else if(marker1 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
-					binary = b.getBinary(column[7]);
-					cout << b.getLowestAddress() << " " << b.getHighestAddress() <<endl;
+					//binary = b.getBinary(column[7]);
+					//cout << b.getLowestAddress() << " " << b.getHighestAddress() <<endl;
+					cycle = c.getIO(column[9]);
+					elapsed = c.toNanoSeconds(reltime);
+					c.setElapsed(cycle, elapsed, "D-to-S");
 					o.printWords(column[7], count, words, num);
 					words -= 2;
 				}
@@ -103,6 +110,9 @@ int main(int argc, char* argv[]) {
 			else if(marker2 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
+					cycle = c.getIO(column[9]);
+					elapsed = c.toNanoSeconds(reltime);
+					c.setElapsed(cycle, elapsed, "D-to-S");
 					o.printWords(column[7], count, words, num);
 					words -= 2;
 				}
@@ -117,9 +127,22 @@ int main(int argc, char* argv[]) {
 			}
 
 			++num;
+
+			// Sum elapsed
+			if(strtod(column[2].c_str(), 0)) {
+				reltime = column[2];
+			}
 		}
 
 		f.close();
+
+		cout << endl;
+		// FIXME: Values incorrect
+		cout << "Read S-to-D: " << c.getAvg("Read", "S-to-D") << endl;
+		cout << "Read D-to-S: " << c.getAvg("Read", "D-to-S") << endl;
+		cout << "Write S-to-D: " << c.getAvg("Write", "S-to-D") << endl;
+		cout << "Write D-to-S: " << c.getAvg("Write", "D-to-S") << endl;
+		cout << "Unknown: " << c.getAvg("", "") << endl;
 	}
 
 	return 0;
