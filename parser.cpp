@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 			else if(marker1 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
-					binary = b.getBinary(column[7]);
+					binary = b.getHexToBinary(column[7]);
 					cout << b.getWord0() << " " << b.getWord1() <<endl;
 					o.printWords(column[7], count, words, num);
 					words -= 2;
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 			else if(marker2 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
-					binary = b.getBinary(column[7]);
+					binary = b.getHexToBinary(column[7]);
 					cout << b.getWord0() << " " << b.getWord1() <<endl;
 					o.printWords(column[7], count, words, num);
 					words -= 2;
