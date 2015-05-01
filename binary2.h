@@ -13,10 +13,10 @@ class Binary2 {
 	public:
 		Binary2();
 		~Binary2();
-		string const getBinary(const string hexString);
+		string const getHexToBinary(const string hexString);
 		void setLowestHighestAddress();
-		string const getLowestAddress();
-		string const getHighestAddress();
+		string const getWord0();
+		string const getWord1();
 
 	private:
 		string binaryString;
