@@ -92,7 +92,7 @@ int main()
 	{
 		int resultBinary = decOfData[0];
 		resultBinary = (resultBinary >> 13);
-		resultBinary = (resultBinary % (int)pow(2, 2));
+		resultBinary = (resultBinary & 4);
 		if (resultBinary == 0)
 		{
 			cout << "Rec_Ctrl = "<< resultBinary << " (no recording)" << endl;
@@ -113,7 +113,7 @@ int main()
 	{
 		int resultBinary = decOfData[1];
 		resultBinary = (resultBinary >> 13);
-		resultBinary = (resultBinary % (int)pow(2, 2));
+		resultBinary = (resultBinary & 8);
 		if (resultBinary == 4)
 		{
 			cout << "Cmd_Type = " << resultBinary << " (Type A)" << endl;
@@ -133,7 +133,7 @@ int main()
 	if (word[4])
 	{
 		int resultBinary = decOfData[4];
-		resultBinary = resultBinary % 2;
+		resultBinary = resultBinary & 2;
 		if (resultBinary == 0)
 		{
 			cout << "Rec_Raw = " << resultBinary << " (disabled)" << endl;
@@ -147,7 +147,7 @@ int main()
 	if (word[5])
 	{
 		int resultBinary = decOfData[5];
-		resultBinary = (resultBinary % (int)pow(2, 7));
+		resultBinary = resultBinary & 128;
 		cout << "Cmd_ID =" << resultBinary << endl;
 	}
 
@@ -155,7 +155,7 @@ int main()
 	{
 		int resultBinary = decOfData[10];
 		resultBinary = (resultBinary >> 11);
-		resultBinary = (resultBinary % (int)pow(2, 5));
+		resultBinary = resultBinary & 32);
 		cout << "Num_Responses = " << resultBinary << endl;
 	}
 
@@ -163,7 +163,7 @@ int main()
 	{
 		int resultBinary = decOfData[15];
 		resultBinary = (resultBinary >> 2);
-		resultBinary = (resultBinary % 2);
+		resultBinary = (resultBinary & 2);
 		if (resultBinary == 0)
 			cout << "Reset_Enable = " << resultBinary << " (disabled)" << endl;
 		else if (resultBinary == 1)
@@ -176,7 +176,7 @@ int main()
 	{
 		int resultBinary = decOfData[22];
 		resultBinary = (resultBinary >> 3);
-		resultBinary = (resultBinary % 2);
+		resultBinary = (resultBinary & 2);
 		if (resultBinary == 0)
 			cout << "Direction = " << resultBinary << " (Right)" << endl;
 		else if (resultBinary == 1)
@@ -188,7 +188,7 @@ int main()
 	if (word[32])
 	{
 		int resultBinary = decOfData[32];
-		resultBinary = (resultBinary % (int)pow(2, 15));
+		resultBinary = resultBinary & 32768);
 		cout << "Num_Samples = " << resultBinary << " (Number of samples)" << endl;
 	}
 
@@ -196,7 +196,7 @@ int main()
 	{
 		int resultBinary = decOfData[37];
 		resultBinary = (resultBinary >> 15);
-		resultBinary = (resultBinary % 2);
+		resultBinary = (resultBinary & 2);
 
 		if (resultBinary == 0)
 			cout << "Parity = " << resultBinary << " (even)" << endl;
@@ -210,7 +210,7 @@ int main()
 	{
 		int resultBinary = decOfData[38];
 		resultBinary = (resultBinary >> 14);
-		resultBinary = (resultBinary % 2);
+		resultBinary = (resultBinary & 2);
 		if (resultBinary == 0)
 			cout << "Test = " << resultBinary << " (disabled)" << endl;
 		else if (resultBinary == 1)
@@ -223,7 +223,7 @@ int main()
 	{
 		int resultBinary = decOfData[40];
 		resultBinary = (resultBinary >> 7);
-		resultBinary = (resultBinary % 2);
+		resultBinary = (resultBinary & 2);
 		if (resultBinary == 0)
 			cout << "Ctrl_Enable = " << resultBinary << " (disabled)" << endl;
 		else if (resultBinary == 1)
@@ -236,7 +236,7 @@ int main()
 	{
 		int resultBinary = decOfData[41];
 		resultBinary = (resultBinary >> 8);
-		resultBinary = (resultBinary % (int)pow(2, 7));
+		resultBinary = resultBinary & 128;
 		cout << "Code = " << resultBinary << " (Code value)" << endl;
 	}
 	cout <<"\n\n";
