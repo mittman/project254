@@ -15,10 +15,13 @@ string const Table::getCode(const int wordPos, string binString) {
 	string desc = "";
 	ostringstream resultString;
 
-	int resultBinary = 0;
-	stringstream ss;
-	ss << binString;
-	ss >> resultBinary;
+	long resultBinary = 0;
+	char* endPtr;
+	//stringstream ss;
+	//ss << binString;
+	//ss >> resultBinary;
+
+	resultBinary = strtol(binString.c_str(), &endPtr, 2);
 
 	if (wordPos == 0) {
 		//int resultBinary = decOfData[22];

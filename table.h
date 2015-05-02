@@ -6,6 +6,8 @@
 #include <sstream>
 //#include <unordered_map>
 #include <vector>
+#include <stdlib.h>
+
 using namespace std;
 
 class Table {
