@@ -6,3 +6,6 @@ parser
 
 # Raw input
 *.log
+
+# Output file
+*.txt
