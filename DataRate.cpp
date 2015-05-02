@@ -1,3 +1,4 @@
+// This function is to pass the bits, the seconds(nano or micro) and determine the megabits/sec
 #include <iostream>
 #include <string>
 using namespace std;
