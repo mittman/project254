@@ -7,5 +7,5 @@ parser
 # Raw input
 *.log
 
-# Output
+# Output Files
 *.txt

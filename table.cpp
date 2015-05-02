@@ -5,42 +5,7 @@ Table::~Table() {}
 
 /*
 {
-	unordered_map<char, int> mymap;
-	mymap['0'] = 0;
-	mymap['1'] = 1;
-	mymap['2'] = 2;
-	mymap['3'] = 3;
-	mymap['4'] = 4;
-	mymap['5'] = 5;
-	mymap['6'] = 6;
-	mymap['7'] = 7;
-	mymap['8'] = 8;
-	mymap['9'] = 9;
-	mymap['A'] = 10;
-	mymap['B'] = 11;
-	mymap['C'] = 12;
-	mymap['D'] = 13;
-	mymap['E'] = 14;
-	mymap['F'] = 15;
-
-	int size; // need to get the number of words somehow
-	int wordCount;
-	vector<int> word(size);
-	vector<int> fedData();
-	vector<int> decOfData();
-
-	bool isLowtoHigh(true);
-	if (isLowtoHigh)
-		for (int i = 0; i < ceil(size / 2); i++)
-		{
-			word[2 * i] = fedData(i).substr(0, 4); 
-			word[(2 * i) + 1] = fedData(i).subtr(4, 4);
-		}
-	else
-		for (int i = size; i <= 0; i--)
-		{
-			
-		}
+Make sure the it's in decimal!!!!
 }
 */
 
@@ -50,15 +15,19 @@ string const Table::getCode(const int wordPos, string binString) {
 	string desc = "";
 	ostringstream resultString;
 
-	int resultBinary = 0;
-	stringstream ss;
-	ss << binString;
-	ss >> resultBinary;
+	long resultBinary = 0;
+	char* endPtr;
+	//stringstream ss;
+	//ss << binString;
+	//ss >> resultBinary;
+
+	resultBinary = strtol(binString.c_str(), &endPtr, 2);
 
 	if (wordPos == 0) {
 		//int resultBinary = decOfData[22];
 		resultBinary = (resultBinary >> 13);
-		resultBinary = (resultBinary & 4);
+		int mask = 11;
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Rec_Ctrl = ";
@@ -82,7 +51,8 @@ string const Table::getCode(const int wordPos, string binString) {
 	}
 	else if (wordPos == 1) {
 		resultBinary = (resultBinary >> 13);
-		resultBinary = (resultBinary & 8);
+		int mask = 111;
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Cmd_Type = ";
@@ -105,7 +75,8 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 4) {
-		resultBinary = resultBinary & 2;
+		int mask = 1;
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Rec_Raw = ";
@@ -124,23 +95,26 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 5) {
-		resultBinary = resultBinary & 128;
+		int mask = 1111111;
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Rec_Raw = ";
 		return field + code;
 	}
 	else if (wordPos == 10) {
+		int mask = 11111;
 		resultBinary = (resultBinary >> 11);
-		resultBinary = (resultBinary & 32);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Num_Responses = ";
 		return field + code;
 	}
 	else if (wordPos == 15) {
+		int mask = 1;
 		resultBinary = (resultBinary >> 2);
-		resultBinary = (resultBinary & 2);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Reset_Enable = ";
@@ -159,8 +133,9 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 22) {
+		int mask = 1;
 		resultBinary = (resultBinary >> 3);
-		resultBinary = (resultBinary & 2);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Direction = ";
@@ -179,15 +154,17 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 32) {
-		resultBinary = (resultBinary & 32768);
+		int mask = 111111111111111;
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Num_Samples = ";
 		return field + code;
 	}
 	else if (wordPos == 37) {
+		int mask = 1;
 		resultBinary = (resultBinary >> 15);
-		resultBinary = (resultBinary & 2);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Parity = ";
@@ -206,8 +183,9 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 38) {
+		int mask = 1;
 		resultBinary = (resultBinary >> 14);
-		resultBinary = (resultBinary & 2);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Test = ";
@@ -226,8 +204,9 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 40) {
+		int mask = 1;
 		resultBinary = (resultBinary >> 7);
-		resultBinary = (resultBinary & 2);
+		resultBinary = (resultBinary & mask);
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Ctrl_Enable = ";
@@ -246,8 +225,9 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 41) {
+		int mask = 1111111;
 		resultBinary = (resultBinary >> 8);
-		resultBinary = resultBinary & 128;
+		resultBinary = resultBinary & mask;
 		resultString << resultBinary;
 		code = resultString.str();
 		field = "Code = ";
