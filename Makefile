@@ -11,9 +11,6 @@ all: parser
 address.o:  address.cpp
 	$(CC) $(CFLAGS) -c $^
 
-binary.o:  binary.cpp
-	$(CC) $(CFLAGS) -c $^
-
 binary2.o: binary2.cpp
 	$(CC) $(CFLAGS) -c $^
 
@@ -26,7 +23,10 @@ output.o:  output.cpp
 parser.o:  parser.cpp
 	$(CC) $(CFLAGS) -c $^
 
-parser:  address.o binary.o binary2.o cycle.o output.o parser.o
+table.o:  table.cpp
+	$(CC) $(CFLAGS) -c $^
+
+parser:  address.o binary2.o cycle.o output.o table.o parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean: 
