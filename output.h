@@ -11,8 +11,10 @@ class Output {
 	public:
 		Output();
 		~Output();
-		void const printCommand(const string cycle, const int words, const int num, const string direction, fstream &out);
-		void printWords(const string data, int &count, const int words, const int num, fstream &out);
+		void const printCommand(const string cycle, const int words, const int num, const string direction);
+		void printWords(const string data, const int wordPos, const int num);
+		void const writeCommand(const string cycle, const int words, const int num, const string direction, fstream &out);
+		void writeWords(const string data, const int wordPos, const int num, fstream &out);
 };
 
 #endif

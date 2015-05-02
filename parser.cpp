@@ -11,21 +11,21 @@
 #include <string>
 #include <vector>
 #include <iterator>
-#include <bitset>
 
 #include "address.h"
-#include "binary.h"
 #include "binary2.h"
 #include "cycle.h"
 #include "output.h"
+#include "table.h"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
 
 	// Check parameters
-	if(argc != 2) {
+	if(argc != 2 && argc !=3) {
 		cerr << "USAGE: ./parser [filename]" << endl;
+		cerr << "USAGE: ./parser [filename] [output]" << endl;
 	}
 	else {
 		// Read log file
@@ -38,10 +38,13 @@ int main(int argc, char* argv[]) {
 		string cycle = "";
 		int words = 0;
 		int count = 0;
+		int wordPos = 0;
 		bool marker1 = false;
 		bool marker2 = false;
 		unsigned long address;
 
+		string highWord = "";
+		string lowWord = "";
 		string binary = "";
 
 
@@ -49,11 +52,17 @@ int main(int argc, char* argv[]) {
 		Address a;
 		Binary2 b;
 		Cycle c;
+		Output o;
+		Table t;
 
 		// Write parsed file
-		Output o;
 		fstream output;
-		output.open("parsed_log.txt", ios:: out);
+		if(argc == 3) {
+			output.open(argv[2], ios:: out);
+		}
+		else {
+			output.open("parsed_log.txt", ios:: out);
+		}
 
 		// Line by line
 		while (getline(f, line)) {
@@ -70,12 +79,14 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
-				o.printCommand(cycle, words, num, "S-to-D",output);
+				o.printCommand(cycle, words, num, "S-to-D");
+				o.writeCommand(cycle, words, num, "S-to-D", output);
 				if(words > 0) {
 					marker1 = true;
 				}
 				else {
 					marker1 = false;
+					cout << endl;
 					output << endl;
 				}
 			}
@@ -84,12 +95,14 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
-				o.printCommand(cycle, words, num, "D-to-S",output);
+				o.printCommand(cycle, words, num, "D-to-S");
+				o.writeCommand(cycle, words, num, "D-to-S", output);
 				if(words > 0) {
 					marker2 = true;
 				}
 				else {
 					marker2 = false;
+					cout << endl;
 					output << endl;
 				}
 			}
@@ -98,8 +111,19 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
 					binary = b.getHexToBinary(column[7]);
-					output << b.getWord0() << " " << b.getWord1() <<endl;
-					o.printWords(column[7], count, words, num,output);
+					wordPos = (count-words);
+					highWord = t.getCode(wordPos, b.getWord0());
+					if(highWord != "") {
+						o.printWords(highWord, wordPos, num);
+						o.writeWords(highWord, wordPos, num, output);
+					}
+
+					wordPos = (count-words+1);
+					lowWord = t.getCode(wordPos, b.getWord1());
+					if(lowWord != "") {
+						o.printWords(lowWord, wordPos, num);
+						o.writeWords(lowWord, wordPos, num, output);
+					}
 					words -= 2;
 				}
 			}
@@ -108,17 +132,30 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
 					binary = b.getHexToBinary(column[7]);
-					output << b.getWord0() << " " << b.getWord1() <<endl;
-					o.printWords(column[7], count, words, num,output);
+					wordPos = (count-words);
+					highWord = t.getCode(wordPos, b.getWord0());
+					if(highWord != "") {
+						o.printWords(highWord, wordPos, num);
+						o.writeWords(highWord, wordPos, num, output);
+					}
+
+					wordPos = (count-words+1);
+					lowWord = t.getCode(wordPos, b.getWord1());
+					if(lowWord != "") {
+						o.printWords(lowWord, wordPos, num);
+						o.writeWords(lowWord, wordPos, num, output);
+					}
 					words -= 2;
 				}
 			}
 			else if(marker1 && words == 0) {
 				marker1 = false;
+				cout << endl;
 				output << endl;
 			}
 			else if(marker2 && words == 0) {
 				marker2 = false;
+				cout << endl;
 				output << endl;
 			}
 
