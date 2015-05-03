@@ -1,26 +1,34 @@
-// This function is to pass the bits, the seconds(nano or micro) and determine the megabits/sec
 #include <iostream>
 #include <string>
 using namespace std;
 
-float MegaBits(int bits, float sec, string NanOrMicro)
+// From what I understand, and based off what the professor said, to convert data rates is to take the number of bits/microseconds
+// this function is purely to convert to megabits
+float MegaBits(int bits, float nanoSec)
 {
 	float megabits = 0;
-	float totalMicroSec = 0;
-	// if the input is a nanosecond, we convert to microsecond
-	if (NanOrMicro == "ns")
+	float microSec = 0;
+	microSec =  nanoSec/1000;
+	
+	megabits = bits/microSec;
+	return megabits;
+}
+
+// this is to check if it is better to represent the value as megabit, gigabit or terabit and return a string representing the data rate (MB/s, GB/s or TB/s)
+string GigaOrTera(float megabits)
+{
+	if(megabits >= 1000)
 	{
-		sec *= .001;
-		megabits = bits / sec;
-		return megabits;
+		megabits /= 1000;
+		return megabits + " GB/s";
 	}
-	else if (NanOrMicro == "us")
-	{
-		megabits = bits / sec;
-		return megabits;
+	else if (megabits >= 10000)
+	{	
+		megabits /= 10000;
+		return megabits + " TB/s";
 	}
 	else
 	{
-		return 0;
+		return megabits + " MB/s";
 	}
 }
