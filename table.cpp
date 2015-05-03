@@ -3,32 +3,22 @@
 Table::Table() {}
 Table::~Table() {}
 
-/*
-{
-Make sure the it's in decimal!!!!
-}
-*/
-
 string const Table::getCode(const int wordPos, string binString) {
 	string field = "";
 	string code = "";
 	string desc = "";
 	ostringstream resultString;
 
-	long resultBinary = 0;
 	char* endPtr;
-	//stringstream ss;
-	//ss << binString;
-	//ss >> resultBinary;
-
-	resultBinary = strtol(binString.c_str(), &endPtr, 2);
+	long mask = 0;
+	long resultDecimal = 0;
+	resultDecimal = strtol(binString.c_str(), &endPtr, 2);
 
 	if (wordPos == 0) {
-		//int resultBinary = decOfData[22];
-		resultBinary = (resultBinary >> 13);
-		int mask = 11;
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 11;
+		resultDecimal = (resultDecimal >> 13);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Rec_Ctrl = ";
 
@@ -50,10 +40,10 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 1) {
-		resultBinary = (resultBinary >> 13);
-		int mask = 111;
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 111;
+		resultDecimal = (resultDecimal >> 13);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Cmd_Type = ";
 
@@ -75,18 +65,18 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 4) {
-		int mask = 1;
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Rec_Raw = ";
 
 		if (code == "0") {
-			desc = " (disabled)";
+			desc = " (disable)";
 			return field + code + desc;
 		}
 		else if (code == "1") {
-			desc = " (enabled)";
+			desc = " (enable)";
 			return field + code + desc;
 		}
 		else {
@@ -95,36 +85,36 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 5) {
-		int mask = 1111111;
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1111111;
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
-		field = "Rec_Raw = ";
+		field = "Cmd_ID = ";
 		return field + code;
 	}
 	else if (wordPos == 10) {
-		int mask = 11111;
-		resultBinary = (resultBinary >> 11);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 11111;
+		resultDecimal = (resultDecimal >> 11);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Num_Responses = ";
 		return field + code;
 	}
 	else if (wordPos == 15) {
-		int mask = 1;
-		resultBinary = (resultBinary >> 2);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal >> 2);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Reset_Enable = ";
 
 		if (code == "0") {
-			desc = " (disabled)";
+			desc = " (disable)";
 			return field + code + desc;
 		}
 		else if (code == "1") {
-			desc = " (enabled)";
+			desc = " (enable)";
 			return field + code + desc;
 		}
 		else {
@@ -133,10 +123,10 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 22) {
-		int mask = 1;
-		resultBinary = (resultBinary >> 3);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal >> 3);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Direction = ";
 
@@ -154,18 +144,18 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 32) {
-		int mask = 111111111111111;
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 111111111111111;
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Num_Samples = ";
 		return field + code;
 	}
 	else if (wordPos == 37) {
-		int mask = 1;
-		resultBinary = (resultBinary >> 15);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal >> 15);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Parity = ";
 
@@ -183,19 +173,19 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 38) {
-		int mask = 1;
-		resultBinary = (resultBinary >> 14);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal >> 14);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Test = ";
 
 		if (code == "0") {
-			desc = " (disabled)";
+			desc = " (disable)";
 			return field + code + desc;
 		}
 		else if (code == "1") {
-			desc = " (enabled)";
+			desc = " (enable)";
 			return field + code + desc;
 		}
 		else {
@@ -204,19 +194,19 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 40) {
-		int mask = 1;
-		resultBinary = (resultBinary >> 7);
-		resultBinary = (resultBinary & mask);
-		resultString << resultBinary;
+		mask = 1;
+		resultDecimal = (resultDecimal >> 7);
+		resultDecimal = (resultDecimal & mask);
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Ctrl_Enable = ";
 
 		if (code == "0") {
-			desc = " (disabled)";
+			desc = " (disable)";
 			return field + code + desc;
 		}
 		else if (code == "1") {
-			desc = " (enabled)";
+			desc = " (enable)";
 			return field + code + desc;
 		}
 		else {
@@ -225,10 +215,10 @@ string const Table::getCode(const int wordPos, string binString) {
 		}
 	}
 	else if (wordPos == 41) {
-		int mask = 1111111;
-		resultBinary = (resultBinary >> 8);
-		resultBinary = resultBinary & mask;
-		resultString << resultBinary;
+		mask = 1111111;
+		resultDecimal = (resultDecimal >> 8);
+		resultDecimal = resultDecimal & mask;
+		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Code = ";
 		return field + code;
