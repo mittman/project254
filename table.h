@@ -15,7 +15,7 @@ class Table {
 	public:
 		Table();
 		~Table();
-		string const getCode(const int wordPos, string binString);
+		string const getCode(const int wordPos, const string binString);
 };
 
 #endif

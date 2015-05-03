@@ -4,9 +4,9 @@ CFLAGS += -Wall
 INSTALL = install
 PREFIX := /usr/bin
 
-.PHONY: all parser clean install uninstall
+.PHONY: all parser parser2 clean install uninstall
 
-all: parser
+all: parser parser2
 
 address.o:  address.cpp
 	$(CC) $(CFLAGS) -c $^
@@ -23,10 +23,19 @@ output.o:  output.cpp
 parser.o:  parser.cpp
 	$(CC) $(CFLAGS) -c $^
 
+parser2.o:  parser2.cpp
+	$(CC) $(CFLAGS) -c $^
+
+reorder.o:  reorder.cpp
+	$(CC) $(CFLAGS) -c $^
+
 table.o:  table.cpp
 	$(CC) $(CFLAGS) -c $^
 
-parser:  address.o binary2.o cycle.o output.o table.o parser.o
+parser:  address.o binary2.o cycle.o output.o table.o reorder.o parser.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+parser2:  address.o binary2.o cycle.o output.o table.o reorder.o parser2.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean: 

@@ -14,12 +14,11 @@ class Binary2 {
 		Binary2();
 		~Binary2();
 		string const getHexToBinary(const string hexString);
-		void setLowestHighestAddress();
+		void setWords(const string binString);
 		string const getWord0();
 		string const getWord1();
 
 	private:
-		string binaryString;
 		string lowestHexAddress;
 		string highestHexAddress;
 };

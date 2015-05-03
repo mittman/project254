@@ -4,6 +4,7 @@ Binary2::Binary2() {}
 Binary2::~Binary2() {}
 
 string const Binary2::getHexToBinary(const string hexString) {
+	string binString = "";
 	int tmp;
 	stringstream base16;
 
@@ -11,18 +12,14 @@ string const Binary2::getHexToBinary(const string hexString) {
 	base16 >> tmp;
 	bitset<32> binary(tmp);
 
-	binaryString = binary.to_string();
-	setLowestHighestAddress();
+	binString = binary.to_string();
 	
-	//cout << binaryString.substr(0,4)<<" "<< binaryString.substr(4,4)<<" "<<binaryString.substr(8,4)<<" "<< binaryString.substr(12,4)<<" "<< 
-	//binaryString.substr(16,4)<<" "<< binaryString.substr(20,4)<<" "<<binaryString.substr(24,4)<<" "<< binaryString.substr(28,4)<<endl;
-	
-	return binaryString;
+	return binString;
 }
 
-void Binary2::setLowestHighestAddress(){
-	lowestHexAddress = binaryString.substr(0,16);
-	highestHexAddress = binaryString.substr(16,16);
+void Binary2::setWords(const string binString){
+	lowestHexAddress = binString.substr(0,16);
+	highestHexAddress = binString.substr(16,16);
 }
 
 string const Binary2::getWord0(){

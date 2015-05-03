@@ -16,6 +16,7 @@
 #include "binary2.h"
 #include "cycle.h"
 #include "output.h"
+#include "reorder.h"
 #include "table.h"
 
 using namespace std;
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
 		// Read log file
 		fstream f;
 		f.open(argv[1], ios::in);
-		
+
 		int num = 1;
 		string line = "";
 
@@ -43,16 +44,17 @@ int main(int argc, char* argv[]) {
 		bool marker2 = false;
 		unsigned long address;
 
+		string binary = "";
 		string highWord = "";
 		string lowWord = "";
-		string binary = "";
-
+		int linenum = 0;
 
 		// Initialize objects
 		Address a;
 		Binary2 b;
 		Cycle c;
 		Output o;
+		Reorder r;
 		Table t;
 
 		// Write parsed file
@@ -86,6 +88,31 @@ int main(int argc, char* argv[]) {
 				}
 				else {
 					marker1 = false;
+					r.sortData();
+					for(int i = 0; i < r.getSize(); ++i) {
+						r.popData();
+						binary = r.getBinary();
+						linenum = r.getNum();
+						b.setWords(binary);
+
+						wordPos = (count-words);
+						highWord = t.getCode(wordPos, b.getWord0());
+						if(highWord != "") {
+							o.printWords(highWord, wordPos, linenum);
+							o.writeWords(highWord, wordPos, linenum, output);
+						}
+
+						wordPos = (count-words+1);
+						lowWord = t.getCode(wordPos, b.getWord1());
+						if(lowWord != "") {
+							o.printWords(lowWord, wordPos, linenum);
+							o.writeWords(lowWord, wordPos, linenum, output);
+						}
+
+						words -= 2;
+					}
+					r.clearData();
+
 					cout << endl;
 					output << endl;
 				}
@@ -102,6 +129,31 @@ int main(int argc, char* argv[]) {
 				}
 				else {
 					marker2 = false;
+					r.sortData();
+					for(int i = 0; i < r.getSize(); ++i) {
+						r.popData();
+						binary = r.getBinary();
+						linenum = r.getNum();
+						b.setWords(binary);
+
+						wordPos = (count-words);
+						highWord = t.getCode(wordPos, b.getWord0());
+						if(highWord != "") {
+							o.printWords(highWord, wordPos, linenum);
+							o.writeWords(highWord, wordPos, linenum, output);
+						}
+
+						wordPos = (count-words+1);
+						lowWord = t.getCode(wordPos, b.getWord1());
+						if(lowWord != "") {
+							o.printWords(lowWord, wordPos, linenum);
+							o.writeWords(lowWord, wordPos, linenum, output);
+						}
+
+						words -= 2;
+					}
+					r.clearData();
+
 					cout << endl;
 					output << endl;
 				}
@@ -111,20 +163,7 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
 					binary = b.getHexToBinary(column[7]);
-					wordPos = (count-words);
-					highWord = t.getCode(wordPos, b.getWord0());
-					if(highWord != "") {
-						o.printWords(highWord, wordPos, num);
-						o.writeWords(highWord, wordPos, num, output);
-					}
-
-					wordPos = (count-words+1);
-					lowWord = t.getCode(wordPos, b.getWord1());
-					if(lowWord != "") {
-						o.printWords(lowWord, wordPos, num);
-						o.writeWords(lowWord, wordPos, num, output);
-					}
-					words -= 2;
+					r.stashData(address, binary, num);
 				}
 			}
 			// D-to-S range
@@ -132,20 +171,7 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x4000101C)) {
 					binary = b.getHexToBinary(column[7]);
-					wordPos = (count-words);
-					highWord = t.getCode(wordPos, b.getWord0());
-					if(highWord != "") {
-						o.printWords(highWord, wordPos, num);
-						o.writeWords(highWord, wordPos, num, output);
-					}
-
-					wordPos = (count-words+1);
-					lowWord = t.getCode(wordPos, b.getWord1());
-					if(lowWord != "") {
-						o.printWords(lowWord, wordPos, num);
-						o.writeWords(lowWord, wordPos, num, output);
-					}
-					words -= 2;
+					r.stashData(address, binary, num);
 				}
 			}
 			else if(marker1 && words == 0) {

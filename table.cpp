@@ -3,7 +3,7 @@
 Table::Table() {}
 Table::~Table() {}
 
-string const Table::getCode(const int wordPos, string binString) {
+string const Table::getCode(const int wordPos, const string binString) {
 	string field = "";
 	string code = "";
 	string desc = "";
