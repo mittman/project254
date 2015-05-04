@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm> 
 #include <iterator>
 
 #include "address.h"
@@ -41,7 +42,13 @@ int main(int argc, char* argv[]) {
 		int wordPos = 0;
 		bool marker1 = false;
 		bool marker2 = false;
+		bool printList = false;
 		unsigned long address;
+
+		vector<unsigned long> addressList;
+		vector<int> wordPosList;
+		vector<string> binaryList;
+		vector<int> numLines;
 
 		string highWord = "";
 		string lowWord = "";
@@ -76,6 +83,34 @@ int main(int argc, char* argv[]) {
 
 			// S-to-D marker
 			if(column[6] == "40000810") {
+				if(printList){
+					if(addressList[0] > addressList[1]){
+						reverse(wordPosList.begin(),wordPosList.end());
+					}
+					vector<int>::size_type sz = binaryList.size();
+					for (unsigned i=0; i<sz; i++){
+
+						highWord = t.getCode(wordPosList[i], binaryList[i]);
+						if(highWord != "") {
+							o.printWords(highWord, wordPosList[i], numLines[i]);
+							o.writeWords(highWord, wordPosList[i], numLines[i], output);
+						}
+
+					}	
+					
+
+					cout << endl;
+					output << endl;
+
+					printList = false;
+					binaryList.clear();
+					numLines.clear();
+					wordPosList.clear();
+					addressList.clear();
+
+				}
+				
+
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
@@ -92,6 +127,36 @@ int main(int argc, char* argv[]) {
 			}
 			// D-to-S marker
 			else if(column[6] == "40000C18") {
+				if(printList){
+
+					if(addressList[0] > addressList[1]){
+						reverse(wordPosList.begin(),wordPosList.end());
+					}
+					vector<int>::size_type sz = binaryList.size();
+					for (unsigned i=0; i<sz; i++){
+
+						highWord = t.getCode(wordPosList[i], binaryList[i]);
+						if(highWord != "") {
+							o.printWords(highWord, wordPosList[i], numLines[i]);
+							o.writeWords(highWord, wordPosList[i], numLines[i], output);
+						}
+
+					}
+
+
+
+					cout << endl;
+					output << endl;
+					
+					printList = false;
+					binaryList.clear();
+					numLines.clear();
+					wordPosList.clear();
+					addressList.clear();
+
+				}
+				
+
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
@@ -105,58 +170,73 @@ int main(int argc, char* argv[]) {
 					cout << endl;
 					output << endl;
 				}
+
 			}
 			// S-to-D range
 			else if(marker1 && words > 0) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
-					binary = b.getHexToBinary(column[7]);
-					wordPos = (count-words);
-					highWord = t.getCode(wordPos, b.getWord0());
-					if(highWord != "") {
-						o.printWords(highWord, wordPos, num);
-						o.writeWords(highWord, wordPos, num, output);
+					if(addressList.size() <2){
+						addressList.push_back(address);
 					}
+					
+					b.hexToBinary(column[7]);
+
+					wordPos = (count-words);
+					wordPosList.push_back(wordPos);
+					binaryList.push_back(b.getWord0());
+					numLines.push_back(num);
+					
 
 					wordPos = (count-words+1);
-					lowWord = t.getCode(wordPos, b.getWord1());
-					if(lowWord != "") {
-						o.printWords(lowWord, wordPos, num);
-						o.writeWords(lowWord, wordPos, num, output);
-					}
+					wordPosList.push_back(wordPos);
+					binaryList.push_back(b.getWord1());
+					numLines.push_back(num);
+					
+
+
+
 					words -= 2;
+					printList = true;
 				}
 			}
 			// D-to-S range
 			else if(marker2 && words > 0) {
 				address = a.getAddress(column[6]);
-				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x40000C20)) {
-					binary = b.getHexToBinary(column[7]);
-					wordPos = (count-words);
-					highWord = t.getCode(wordPos, b.getWord0());
-					if(highWord != "") {
-						o.printWords(highWord, wordPos, num);
-						o.writeWords(highWord, wordPos, num, output);
+				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x4000101C)) {
+					if(addressList.size() <2){
+						addressList.push_back(address);
 					}
 
+					b.hexToBinary(column[7]);
+
+					wordPos = (count-words);
+					wordPosList.push_back(wordPos);
+					binaryList.push_back(b.getWord0());
+					numLines.push_back(num);
+					
+
 					wordPos = (count-words+1);
-					lowWord = t.getCode(wordPos, b.getWord1());
-					if(lowWord != "") {
-						o.printWords(lowWord, wordPos, num);
-						o.writeWords(lowWord, wordPos, num, output);
-					}
+					wordPosList.push_back(wordPos);
+					binaryList.push_back(b.getWord1());
+					numLines.push_back(num);
+
+
 					words -= 2;
+					printList = true;
+				
 				}
 			}
 			else if(marker1 && words == 0) {
 				marker1 = false;
-				cout << endl;
-				output << endl;
+				//cout << endl;
+				//output << endl;
 			}
 			else if(marker2 && words == 0) {
+
 				marker2 = false;
-				cout << endl;
-				output << endl;
+				//cout << endl;
+				//output << endl;
 			}
 
 			++num;

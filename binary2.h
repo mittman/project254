@@ -13,8 +13,9 @@ class Binary2 {
 	public:
 		Binary2();
 		~Binary2();
-		string const getHexToBinary(const string hexString);
+		void hexToBinary(const string hexString);
 		void setLowestHighestAddress();
+		string const getBinaryString();
 		string const getWord0();
 		string const getWord1();
 
