@@ -9,12 +9,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <string.h>
 #include <vector>
 #include <iterator>
 
 #include "address.h"
 #include "binary2.h"
 #include "cycle.h"
+#include "datarate.h"
 #include "output.h"
 #include "reorder.h"
 #include "table.h"
@@ -37,12 +39,14 @@ int main(int argc, char* argv[]) {
 		string line = "";
 
 		string cycle = "";
+		string direction = "";
 		int words = 0;
 		int count = 0;
 		int wordPos = 0;
 		bool marker1 = false;
 		bool marker2 = false;
-		unsigned long address;
+		unsigned long address = 0;
+		long elapsed = 0;
 
 		string binary = "";
 		string highWord = "";
@@ -59,11 +63,16 @@ int main(int argc, char* argv[]) {
 
 		// Write parsed file
 		fstream output;
-		if(argc == 3) {
+		if(argc == 3 && strcmp(argv[2], "-") == 0) {
+			o.setMode("print");
+		}
+		else if(argc == 3) {
 			output.open(argv[2], ios:: out);
+			o.setMode("file");
 		}
 		else {
-			output.open("parsed_log.txt", ios:: out);
+			output.open("log_parsed.txt", ios:: out);
+			o.setMode("file");
 		}
 
 		// Line by line
@@ -76,13 +85,18 @@ int main(int argc, char* argv[]) {
 				 istream_iterator<string>(),
 				 back_inserter(column));
 
+			c.setElapsed(cycle, elapsed, direction);
+			cycle = "";
+			direction = "";
+			elapsed = 0;
+
 			// S-to-D marker
 			if(column[6] == "40000810") {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
-				o.printCommand(cycle, words, num, "S-to-D");
-				o.writeCommand(cycle, words, num, "S-to-D", output);
+				direction = "S-to-D";
+				o.writeCommand(cycle, words, num, direction, output);
 				if(words > 0) {
 					marker1 = true;
 				}
@@ -92,20 +106,20 @@ int main(int argc, char* argv[]) {
 					for(int i = 0; i < r.getSize(); ++i) {
 						r.popData();
 						binary = r.getBinary();
+						cycle = r.getCycle();
+						elapsed = r.getElapsed();
 						linenum = r.getNum();
 						b.setWords(binary);
 
 						wordPos = (count-words);
 						highWord = t.getCode(wordPos, b.getWord0());
 						if(highWord != "") {
-							o.printWords(highWord, wordPos, linenum);
 							o.writeWords(highWord, wordPos, linenum, output);
 						}
 
 						wordPos = (count-words+1);
 						lowWord = t.getCode(wordPos, b.getWord1());
 						if(lowWord != "") {
-							o.printWords(lowWord, wordPos, linenum);
 							o.writeWords(lowWord, wordPos, linenum, output);
 						}
 
@@ -113,8 +127,7 @@ int main(int argc, char* argv[]) {
 					}
 					r.clearData();
 
-					cout << endl;
-					output << endl;
+					o.writeBlank(output);
 				}
 			}
 			// D-to-S marker
@@ -122,8 +135,8 @@ int main(int argc, char* argv[]) {
 				words = a.getLength(column[7]);
 				count = words;
 				cycle = c.getIO(column[9]);
-				o.printCommand(cycle, words, num, "D-to-S");
-				o.writeCommand(cycle, words, num, "D-to-S", output);
+				direction = "D-to-S";
+				o.writeCommand(cycle, words, num, direction, output);
 				if(words > 0) {
 					marker2 = true;
 				}
@@ -133,20 +146,20 @@ int main(int argc, char* argv[]) {
 					for(int i = 0; i < r.getSize(); ++i) {
 						r.popData();
 						binary = r.getBinary();
+						cycle = r.getCycle();
+						elapsed = r.getElapsed();
 						linenum = r.getNum();
 						b.setWords(binary);
 
 						wordPos = (count-words);
 						highWord = t.getCode(wordPos, b.getWord0());
 						if(highWord != "") {
-							o.printWords(highWord, wordPos, linenum);
 							o.writeWords(highWord, wordPos, linenum, output);
 						}
 
 						wordPos = (count-words+1);
 						lowWord = t.getCode(wordPos, b.getWord1());
 						if(lowWord != "") {
-							o.printWords(lowWord, wordPos, linenum);
 							o.writeWords(lowWord, wordPos, linenum, output);
 						}
 
@@ -154,8 +167,7 @@ int main(int argc, char* argv[]) {
 					}
 					r.clearData();
 
-					cout << endl;
-					output << endl;
+					o.writeBlank(output);
 				}
 			}
 			// S-to-D range
@@ -163,7 +175,11 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000818) <= address && address <= static_cast<long>(0x40000C14)) {
 					binary = b.getHexToBinary(column[7]);
-					r.stashData(address, binary, num);
+					cycle = c.getIO(column[9]);
+					direction = "S-to-D";
+					elapsed = c.toNanoSeconds(column[2]);
+					r.stashData(address, binary, cycle, elapsed, num);
+					c.plusType(cycle, direction);
 				}
 			}
 			// D-to-S range
@@ -171,24 +187,33 @@ int main(int argc, char* argv[]) {
 				address = a.getAddress(column[6]);
 				if(static_cast<long>(0x40000C20) <= address && address <= static_cast<long>(0x4000101C)) {
 					binary = b.getHexToBinary(column[7]);
-					r.stashData(address, binary, num);
+					cycle = c.getIO(column[9]);
+					direction = "D-to-S";
+					elapsed = c.toNanoSeconds(column[2]);
+					r.stashData(address, binary, cycle, elapsed, num);
+					c.plusType(cycle, direction);
 				}
 			}
 			else if(marker1 && words == 0) {
 				marker1 = false;
-				cout << endl;
-				output << endl;
+				o.writeBlank(output);
 			}
 			else if(marker2 && words == 0) {
 				marker2 = false;
-				cout << endl;
-				output << endl;
+				o.writeBlank(output);
 			}
 
 			++num;
 		}
 
 		f.close();
+
+		// Data Rates
+		//o.writeRate(c.getAvg("Read", "S-to-D")*1000, "Read", "S-to-D", output);
+		//o.writeRate(c.getAvg("Read", "D-to-S")*1000, "Read", "D-to-S", output);
+		//o.writeRate(c.getAvg("Write", "S-to-D")*1000, "Write", "S-to-D", output);
+		//o.writeRate(c.getAvg("Write", "D-to-S")*1000, "Write", "D-to-S", output);
+
 		output.close();
 	}
 

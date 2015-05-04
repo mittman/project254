@@ -1,6 +1,18 @@
 #include "cycle.h"
 
-Cycle::Cycle() {}
+Cycle::Cycle() {
+	dsReads = 0;
+	dsWrites = 0;
+	sdReads = 0;
+	sdWrites = 0;
+	errors = 0;
+	dsrTime = 0;
+	dswTime = 0;
+	sdrTime = 0;
+	sdwTime = 0;
+	errTime = 0;
+}
+
 Cycle::~Cycle() {}
 
 string const Cycle::getIO(const string column9) {
@@ -33,47 +45,96 @@ double Cycle::toNanoSeconds(const string reltime) {
 		return elapsed;
 	}
     else {
-		return 0.0;
+		return 0;
+	}
+}
+
+void Cycle::resetElapsed(const string cycle, const string direction) {
+	if(direction == "D-to-S" && cycle == "Read") {
+		dsrTime = 0;
+	}
+	else if(direction == "D-to-S" && cycle == "Write") {
+		dswTime = 0;
+	}
+	else if(direction == "S-to-D" && cycle == "Read") {
+		sdrTime = 0;
+	}
+	else if(direction == "S-to-D" && cycle == "Write") {
+		sdwTime = 0;
+	}
+	else {
+		errTime = 0;
 	}
 }
 
 void Cycle::setElapsed(const string cycle, const double elapsed, const string direction) {
 	if(direction == "D-to-S" && cycle == "Read") {
 		dsrTime += elapsed;
-		++dsReads;
 	}
 	else if(direction == "D-to-S" && cycle == "Write") {
 		dswTime += elapsed;
-		++dsWrites;
 	}
 	else if(direction == "S-to-D" && cycle == "Read") {
 		sdrTime += elapsed;
-		++sdReads;
 	}
 	else if(direction == "S-to-D" && cycle == "Write") {
 		sdwTime += elapsed;
-		++sdWrites;
 	}
 	else {
 		errTime += elapsed;
+	}
+}
+
+void Cycle::plusType(const string cycle, const string direction) {
+	if(direction == "D-to-S" && cycle == "Read") {
+		++dsReads;
+	}
+	else if(direction == "D-to-S" && cycle == "Write") {
+		++dsWrites;
+	}
+	else if(direction == "S-to-D" && cycle == "Read") {
+		++sdReads;
+	}
+	else if(direction == "S-to-D" && cycle == "Write") {
+		++sdWrites;
+	}
+	else {
 		++errors;
 	}
 }
 
-double Cycle::getAvg(const string cycle, const string direction) {
+int Cycle::getBits(const string cycle, const string direction) {
 	if(direction == "D-to-S" && cycle == "Read") {
-		return dsrTime / dsReads;
+		return dsReads * 32;
 	}
 	else if(direction == "D-to-S" && cycle == "Write") {
-		return dswTime / dsWrites;
+		return dsWrites * 32;
 	}
 	else if(direction == "S-to-D" && cycle == "Read") {
-		return sdrTime / sdReads;
+		return sdReads * 32;
 	}
 	else if(direction == "S-to-D" && cycle == "Write") {
-		return sdwTime / sdWrites;
+		return sdWrites * 32;
 	}
 	else {
-		return errTime / errors;
+		return errors * 32;
+	}
+}
+
+long Cycle::getElapsed(const string cycle, const string direction) {
+	if(direction == "D-to-S" && cycle == "Read") {
+		return dsrTime;
+	}
+	else if(direction == "D-to-S" && cycle == "Write") {
+		return dswTime;
+	}
+	else if(direction == "S-to-D" && cycle == "Read") {
+		return sdrTime;
+	}
+	else if(direction == "S-to-D" && cycle == "Write") {
+		return sdwTime;
+	}
+	else {
+		return errTime;
 	}
 }
