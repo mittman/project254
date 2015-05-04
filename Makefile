@@ -26,13 +26,10 @@ output.o:  output.cpp
 parser.o:  parser.cpp
 	$(CC) $(CFLAGS) -c $^
 
-reorder.o:  reorder.cpp
-	$(CC) $(CFLAGS) -c $^
-
 table.o:  table.cpp
 	$(CC) $(CFLAGS) -c $^
 
-parser:  address.o binary2.o cycle.o datarate.o output.o table.o reorder.o parser.o
+parser:  address.o binary2.o cycle.o datarate.o output.o table.o parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
