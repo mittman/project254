@@ -1,34 +1,35 @@
-#include <iostream>
-#include <string>
-using namespace std;
+#include "datarate.h"
+DataRate::DataRate() {}
+DataRate::~DataRate() {}
 
-// From what I understand, and based off what the professor said, to convert data rates is to take the number of bits/microseconds
-// this function is purely to convert to megabits
-float MegaBits(int bits, float nanoSec)
-{
-	float megabits = 0;
+float const DataRate::MegaBits(const int words, const long nanoSec) {
+	int bits = words * 32;
 	float microSec = 0;
-	microSec =  nanoSec/1000;
-	
-	megabits = bits/microSec;
-	return megabits;
+	microSec = nanoSec / 1000;
+	return bits / microSec;
 }
 
-// this is to check if it is better to represent the value as megabit, gigabit or terabit and return a string representing the data rate (MB/s, GB/s or TB/s)
-string GigaOrTera(float megabits)
-{
-	if(megabits >= 1000)
-	{
-		megabits /= 1000;
-		return megabits + " GB/s";
+string const DataRate::GigaOrTera(float const megabits) {
+	float speed = 0;
+	string unit = "";
+
+	if(megabits >= 1000) {
+		speed = megabits / 1000;
+		speed = floor(speed * 100.0) / 100.0;
+		unit = " Gigabits/s";
 	}
-	else if (megabits >= 10000)
-	{	
-		megabits /= 10000;
-		return megabits + " TB/s";
+	else if (megabits >= 1000000) {
+		speed = megabits / 1000000;
+		speed = floor(speed * 100.0) / 100.0;
+		unit = " Terabits/s";
 	}
-	else
-	{
-		return megabits + " MB/s";
+	else {
+		speed = megabits;
+		speed = floor(speed * 100.0) / 100.0;
+		unit = " Megabits/s";
 	}
+
+	ostringstream ss;
+	ss << speed;
+	return ss.str() + unit;
 }
