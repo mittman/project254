@@ -17,6 +17,9 @@ binary2.o: binary2.cpp
 cycle.o:  cycle.cpp
 	$(CC) $(CFLAGS) -c $^
 
+datarate.o:  datarate.cpp
+	$(CC) $(CFLAGS) -c $^
+
 output.o:  output.cpp
 	$(CC) $(CFLAGS) -c $^
 
@@ -32,14 +35,14 @@ reorder.o:  reorder.cpp
 table.o:  table.cpp
 	$(CC) $(CFLAGS) -c $^
 
-parser:  address.o binary2.o cycle.o output.o table.o reorder.o parser.o
+parser:  address.o binary2.o cycle.o datarate.o output.o table.o reorder.o parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-parser2:  address.o binary2.o cycle.o output.o table.o reorder.o parser2.o
+parser2:  address.o binary2.o cycle.o datarate.o output.o table.o reorder.o parser2.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-clean: 
-	$(RM) parser *.o *~
+clean:
+	$(RM) parser parser2 *.o *~
 
 install: all
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)
