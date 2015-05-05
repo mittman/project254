@@ -96,6 +96,9 @@ int main(int argc, char* argv[]) {
 				if(printList){
 					if(addressList[0] > addressList[1]){
 						reverse(wordPosList.begin(),wordPosList.end());
+						vector<int>::size_type siz = binaryList.size();
+						for (unsigned i=0; i < siz-1; i+=2)
+							iter_swap(binaryList.begin()+i, binaryList.begin()+i+1);
 					}
 					vector<int>::size_type sz = binaryList.size();
 					for (unsigned i=0; i<sz; i++){
@@ -138,6 +141,10 @@ int main(int argc, char* argv[]) {
 				if(printList){
 					if(addressList[0] > addressList[1]){
 						reverse(wordPosList.begin(),wordPosList.end());
+						
+						for (unsigned i=0; i < binaryList.size()-1; i+=2)
+							iter_swap(binaryList.begin()+i, binaryList.begin()+i+1);
+	
 					}
 					vector<int>::size_type sz = binaryList.size();
 					for (unsigned i=0; i<sz; i++){
@@ -199,7 +206,7 @@ int main(int argc, char* argv[]) {
 					wordPosList.push_back(wordPos);
 					binaryList.push_back(b.getWord1());
 					numLines.push_back(num);
-
+		
 					words -= 2;
 					printList = true;
 				}
@@ -228,7 +235,6 @@ int main(int argc, char* argv[]) {
 					wordPosList.push_back(wordPos);
 					binaryList.push_back(b.getWord1());
 					numLines.push_back(num);
-
 					words -= 2;
 					printList = true;
 

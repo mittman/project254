@@ -15,9 +15,9 @@ string const Table::getCode(const int wordPos, const string binString) {
 	resultDecimal = strtol(binString.c_str(), &endPtr, 2);
 
 	if (wordPos == 0) {
-		mask = 11;
+		resultDecimal &= ~(1 << 15);
 		resultDecimal = (resultDecimal >> 13);
-		resultDecimal = (resultDecimal & mask);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Rec_Ctrl = ";
@@ -40,9 +40,9 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 1) {
-		mask = 111;
+		//mask = 111;
 		resultDecimal = (resultDecimal >> 13);
-		resultDecimal = (resultDecimal & mask);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Cmd_Type = ";
@@ -65,8 +65,10 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 4) {
-		mask = 1;
-		resultDecimal = (resultDecimal & mask);
+		//mask = 1;
+		for (int i = 15; i > 0; i--)
+			resultDecimal &= ~(1 << i);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Rec_Raw = ";
@@ -85,26 +87,30 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 5) {
-		mask = 1111111;
-		resultDecimal = (resultDecimal & mask);
+		for (int i = 15; i > 6; i--)
+			resultDecimal &= ~(1 << i);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Cmd_ID = ";
 		return field + code;
 	}
 	else if (wordPos == 10) {
-		mask = 11111;
+		//mask = 11111;
 		resultDecimal = (resultDecimal >> 11);
-		resultDecimal = (resultDecimal & mask);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Num_Responses = ";
 		return field + code;
 	}
 	else if (wordPos == 15) {
-		mask = 1;
+		//mask = 1;
+		//resultDecimal = (resultDecimal >> 2);
+		//resultDecimal = (resultDecimal & mask);
+		for (int i = 15; i > 2; i--)
+			resultDecimal &= ~(1 << i);
 		resultDecimal = (resultDecimal >> 2);
-		resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Reset_Enable = ";
@@ -123,9 +129,12 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 22) {
-		mask = 1;
+		//mask = 1;
+		//resultDecimal = (resultDecimal >> 3);
+		//resultDecimal = (resultDecimal & mask);
+		for (int i = 15; i > 3; i--)
+			resultDecimal &= ~(1 << i);
 		resultDecimal = (resultDecimal >> 3);
-		resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Direction = ";
@@ -144,16 +153,16 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 32) {
-		mask = 111111111111111;
-		resultDecimal = (resultDecimal & mask);
+		resultDecimal &= ~(1 << 15);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Num_Samples = ";
 		return field + code;
 	}
 	else if (wordPos == 37) {
-		mask = 1;
-		resultDecimal = (resultDecimal >> 15);
+		//mask = 1;
+		//resultDecimal = (resultDecimal >> 15);
 		resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
@@ -173,9 +182,10 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 38) {
-		mask = 1;
+		//mask = 1;
+		resultDecimal &= ~(1 << 15);
 		resultDecimal = (resultDecimal >> 14);
-		resultDecimal = (resultDecimal & mask);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Test = ";
@@ -194,9 +204,11 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 40) {
-		mask = 1;
+		//mask = 1;
+		for (int i = 15; i > 7; i--)
+			resultDecimal &= ~(1 << i);
 		resultDecimal = (resultDecimal >> 7);
-		resultDecimal = (resultDecimal & mask);
+		//resultDecimal = (resultDecimal & mask);
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Ctrl_Enable = ";
@@ -215,9 +227,9 @@ string const Table::getCode(const int wordPos, const string binString) {
 		}
 	}
 	else if (wordPos == 41) {
-		mask = 1111111;
+		resultDecimal &= ~(1 << 15);
 		resultDecimal = (resultDecimal >> 8);
-		resultDecimal = resultDecimal & mask;
+		//resultDecimal = resultDecimal & mask;
 		resultString << resultDecimal;
 		code = resultString.str();
 		field = "Code = ";
